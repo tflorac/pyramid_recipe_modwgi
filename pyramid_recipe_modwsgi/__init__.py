@@ -4,6 +4,10 @@ import stat
 import zc.buildout
 from zc.recipe.egg.egg import Eggs
 
+ENV_TEMPLATE = """\
+import os
+"""
+
 WSGI_TEMPLATE = """\
 import sys
 sys.path[0:0] = [
@@ -51,7 +55,17 @@ class Recipe:
         if app_name is not None:
             app_name = '"%s"' % app_name
 
-        output = WSGI_TEMPLATE % dict(
+        env = self.options.get('env')
+        if env:
+            output = ENV_TEMPLATE
+            for line in env.splitlines():
+                key, value = line.split('=')
+                output += "os.environ['%s'] = '%s'\n" % (key, value)
+            output += '\n'
+        else:
+            output = ''
+
+        output += WSGI_TEMPLATE % dict(
             configfile=self.options["config-file"],
             syspath=",\n    ".join((repr(p) for p in path)),
             app_name=app_name
