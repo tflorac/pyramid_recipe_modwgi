@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name='pyramid-recipe-modwsgi',
-    version='0.1',
+    version='0.2',
     description='zc.buildout recipe to create apache modwsgi file.',
     long_description=open('README.rst').read(),
     author='Rok Garbas',
